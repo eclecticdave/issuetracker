@@ -1,0 +1,117 @@
+<style type="text/css">
+div#issueFilterBox {
+	padding-top: 10px;
+	float: left;
+	width: 50%;
+}
+div#issueSearchBox {
+	padding-top: 10px;
+	float: left;
+	width: 50%;
+	text-align: right;
+}
+div.issueClear {
+	float: none;
+	clear: both;
+}
+.s_clo, .s_res {
+	text-decoration: line-through;
+}
+</style>
+<?php if (isset($this->filter) && $this->filter === true): ?>
+<div id="issueFilterBox">
+	<form name="bt_filter" method="get" action="<?php echo $this->formAction; ?>">
+	  <input type="hidden" name="title" value="<?php echo $this->pageKey; ?>" />
+	  <input type="hidden" name="project" value="<?php echo $this->project; ?>" />
+	  <input type="hidden" name="bt_action" value="<?php echo $this->action; ?>" />
+	  <label for="bt_filters"><?php echo wfMsg('filter_title'); ?>: </label>
+	  <?php if ($this->isLoggedIn()): ?>
+	  <select name="bt_filter_by">
+	  <optgroup label="filter" title="Filter">
+	    <option value="all"<?php echo ($this->filterBy == null) ? ' selected="true"' : ''; ?>>All issues</option>
+	    <option value="reported_by_me"<?php echo ($this->filterBy == 'reported_by_me') ? ' selected="true"' : ''; ?>>Reported by me</option>
+	    <option value="assined_to_me"<?php echo ($this->filterBy == 'assined_to_me') ? ' selected="true"' : ''; ?>>Assigned to me</option>
+	  </select>
+	  <?php endif; ?>
+	  <select name="bt_filter_status">
+	  <optgroup label="status" title="Status">
+	    <option value="any"<?php echo ($this->filterStatus == null) ? ' selected="true"' : ''; ?>>Any</option>
+        <?php foreach ($this->issueStatus as $name => $status): ?> 
+        <option value="<?php echo $name; ?>"<?php echo ($this->filterStatus == $name) ? ' selected="true"' : ''; ?>><?php echo $status['name']; ?></option>
+        <?php endforeach; ?>
+	    <option value="archived"<?php echo ($this->filterStatus == 'archived') ? ' selected="true"' : ''; ?>>Archived</option>
+	  </optgroup>
+	  </select>
+	  <input type="submit" name="bt_filter" id="bt_filter" value="<?php echo wfMsg('form_apply'); ?>" />
+	</form>
+</div>
+<?php endif; ?>
+<?php if (isset($this->search) && $this->search === true): ?>
+<div id="issueSearchBox">
+	<form name="bt_search" method="get" action="<?php echo $this->formAction; ?>">
+	  <input type="hidden" name="title" value="<?php echo $this->pageKey; ?>" />
+	  <input type="hidden" name="project" value="<?php echo $this->project; ?>" />
+	  <input type="hidden" name="bt_action" value="<?php echo $this->action; ?>" />
+	  <label for="bt_search_string"><?php echo wfMsg('search'); ?> </label>
+	  <input type="text" name="bt_search_string" id="bt_search_string" value="<?php echo (isset($this->searchString)) ? $this->searchString : ''; ?>" /> 
+	  <input type="submit" name="bt_search" id="bt_search" value="<?php echo wfMsg('form_submit'); ?>" />
+	</form>
+</div>
+<?php endif; ?>
+<div class="issueClear"></div>
+<h2><?php if ($this->auth === false || ($this->auth === true && $this->isLoggedIn === true)): ?>
+<span class="editsection">[<a href="<?php echo $this->addUrl; ?>"><?php echo wfMsg('add'); ?></a>]</span> 
+<?php else: ?>
+<span class="editsection"><?php echo wfMsg('login_msg'); ?></span>
+<?php endif; ?>
+<span class="mw-headline"><?php echo wfMsg('view_issues'); ?></span></h2>
+<table cellpadding="3" class="wikitable sortable" width="98%" style="font-size: 90%">
+  <tr>
+    <th valign="top" align="left" width="40"><b><?php echo wfMsg('id'); ?></b></th>
+    <th valign="top" align="left" width="80"><b><?php echo wfMsg('type'); ?></b></th>
+    <th valign="top" align="left" width="350"><b><?php echo wfMsg('title'); ?></b></th>
+    <th valign="top" align="left" width="80"><b><?php echo wfMsg('status'); ?></b></th>
+    <th valign="top" align="left" width="90"><b><?php echo wfMsg('assignee'); ?></b></th>
+    <th valign="top" align="left" width="70"><b><?php echo wfMsg('date'); ?></b></th>
+    <th valign="top" align="center" width="100"><b><?php echo wfMsg('action'); ?></b></th>
+  </tr>
+  <?php while ($issue = $this->issues->fetchObject()): ?>
+  <tr>
+    <td><?php if ($this->hasViewPerms): ?><a href="<?php echo $this->viewUrl . $issue->issue_id; ?>"># <?php echo $issue->issue_id; ?></a><?php else: ?># <?php echo $issue->issue_id; endif; ?></td>
+    <td style="background-color: #<?php echo $this->issueType[$issue->type]['colour']; ?>"><?php echo $this->issueType[$issue->type]['name']; ?></td>
+    <td><span class="<?php echo $issue->status; ?>"><?php echo htmlspecialchars($issue->title); ?></span></td>
+    <td style="background-color: #<?php echo $this->issueStatus[$issue->status]['colour']; ?>"><?php echo $this->issueStatus[$issue->status]['name']; ?></td>
+    <td><?php echo htmlspecialchars($issue->assignee); ?></td>
+    <td><?php echo date("d-m-Y", strtotime($issue->priority_date)); ?></td>
+    <td align="center">
+    <?php if ($this->isLoggedIn): ?>
+    	<?php if ($this->hasEditPerms): ?>[<a href="<?php echo $this->editUrl . $issue->issue_id; ?>"><?php echo wfMsg('edit'); ?></a>]&nbsp;<?php endif; ?>
+    	<?php if ($this->hasDeletePerms): ?>[<a href="<?php echo $this->deleteUrl . $issue->issue_id; ?>"><?php echo wfMsg('archive'); ?></a>]<?php endif; ?>
+    <?php endif; ?></td>
+  </tr>
+  <?php endwhile; ?>
+</table>
+<p> </p>
+<table border="0">
+  <tr>
+    <td><strong><?php echo wfMsg('type'); ?></strong>
+    <table cellpadding="3" style="font-size: 90%">
+        <tr>
+        <?php foreach ($this->issueType as $name => $type): ?>  
+          <td width="80" bgcolor="#<?php echo $type['colour']; ?>"><?php echo $type['name']; ?></td>
+        <?php endforeach; ?>
+        </tr>
+      </table></td>
+    <td style="padding-left: 30px"><strong><?php echo wfMsg('status'); ?></strong>
+	<table cellpadding="3" style="font-size: 90%">
+        <tr>
+        <?php foreach ($this->issueStatus as $name => $status): ?>  
+          <td width="80" bgcolor="#<?php echo $status['colour']; ?>"><?php echo $status['name']; ?></td>
+        <?php endforeach; ?>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+<p>
+<?php if ($this->isAllowed): ?>[<a href="/index.php?title=Special:Userrights">User groups</a>]<?php endif; ?>
+</p>

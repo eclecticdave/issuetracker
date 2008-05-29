@@ -1,0 +1,5 @@
+SVN Repository
+--------------
+
+Check out the current development trunk with:
+$ svn checkout http://svn.phpimpact.com/repo/IssueTracker/trunk
