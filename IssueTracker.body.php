@@ -141,7 +141,7 @@ class IssueTracker extends SpecialPage
 	{
 		global $wgRequest;
 		
-		$action = $wgRequest->getText('bt_action', 'list');
+		$action = $wgRequest->getText('bt_action', $this->config->defaultAction);
 		$class = __CLASS__ . 'Action' . ucfirst(strtolower($action));
 		$method = $action . 'Action';
 		$file = dirname(__FILE__) . '/Actions/' . $class . '.php';

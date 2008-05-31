@@ -29,7 +29,14 @@ class IssueTrackerConfig
 	 * @var array
 	 */
 	protected $_issueStatus = null;
-	
+
+
+	/**
+	 * This is the action used whenever the bt_action parameter is not present
+	 * @var string
+	 */
+	public $defaultAction = 'list';
+
 	/**
 	 * ...
 	 * 
