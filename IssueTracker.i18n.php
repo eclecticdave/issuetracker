@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2008 Federico Cargnelutti
  * @license     GNU General Public Licence 2.0 or later
  */
-$messages['en']['issuetracker']    = 'Issue Tracker';
+$messages['en']['issuetracker']    = 'IssueTracker';
 $messages['en']['view_issues']     = 'View Issues';
 $messages['en']['project']         = 'Project';
 $messages['en']['add']             = 'add';

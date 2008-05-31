@@ -56,10 +56,16 @@ class IssueTracker extends SpecialPage
 		// Set the page namespace
 		$title = Title::makeTitle(NS_SPECIAL, $this->getName());
 		$namespace['dbKey'] = $title->getPrefixedDbKey();
+		if ($par) $namespace['dbKey'] .= '/' . $par;
 		$namespace['text'] = $title->getPrefixedDbKey();
 		
+		$args = array();
+		$args['project'] = $par;
+
+		$isParserHook = false;
+		
 		// Process request
-		$output = $this->_processActionRequest($namespace);
+		$output = $this->_processActionRequest($namespace, $isParserHook, $args);
 		
 		// Output
 		$this->setHeaders();
