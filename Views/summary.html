@@ -1,0 +1,8 @@
+<div class="issuetracker_summary">
+<a href="<?php echo $this->url; ?>"><?php echo $this->issuecount; ?> Issues</a>
+<ul>
+<?php while ($row = $this->issuesummary->fetchObject()): ?>
+	<li><?php echo $row->count; ?> in <?php echo $this->issueLookup[$row->groupby]['name']; ?></li>
+<?php endwhile; ?>
+</ul>
+</div>

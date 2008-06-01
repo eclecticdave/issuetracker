@@ -35,7 +35,7 @@ class IssueTrackerConfig
 	 * This is the action used whenever the bt_action parameter is not present
 	 * @var string
 	 */
-	public $defaultAction = 'list';
+	public $defaultAction = 'summary';
 
 	/**
 	 * ...
@@ -52,6 +52,7 @@ class IssueTrackerConfig
 		$perms['delete']   = array('group' => '*');
 		$perms['assign']   = array('group' => 'sysop');
 		$perms['assignee'] = array('group' => 'sysop');
+		$perms['summary']  = array('group' => '*');
 		
 		$this->_permissions = $perms;
 	}

@@ -134,5 +134,27 @@ class IssueTrackerModelDefault extends IssueTrackerModel
 		
 		return $this->_dbr->update($this->_table, $value, $conds);
 	}
+
+	/**
+	 * Summarise Issues
+	 *
+	 * @param mixed $conds Conditions
+	 * @param string $groupby Field to Group By
+	 * @return ResultSet
+	 */
+	public function getIssueSummary($conds, $groupby = null)
+	{		
+		if (empty($groupby)) {
+			$options = array();
+			$fields = array('count(*) as count');
+		}
+		else {
+			$options = array('GROUP BY' => $groupby);
+			$fields = array("$groupby as groupby", 'count(*) as count');
+		}
+		
+		return $this->_dbr->select($this->_table, $fields, $conds, 'Database::select', $options);
+	}
+
 }
 ?>
